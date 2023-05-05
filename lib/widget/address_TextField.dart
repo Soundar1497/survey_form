@@ -36,14 +36,19 @@ class _AddressTextFieldState extends State<AddressTextField> {
 
   @override
   Widget build(BuildContext context) {
-    var w = widget.width ?? MediaQuery.of(context).size.width;
+    var dw = widget.width ?? MediaQuery.of(context).size.width;
+    double dh = MediaQuery.of(context).size.height;
+
+    var textSize = dh * .03;
+
     return Container(
-      width: w,
-      // height: 60,
+      width: dw,
+      // height: 80,
       // color: Colors.red,
-      margin: const EdgeInsets.only(top: 8),
+      margin: EdgeInsets.only(top: dw * 0.02),
       child: TextFormField(
           onChanged: (data) {},
+          style: TextStyle(fontSize: textSize),
           textAlign: TextAlign.start,
           textCapitalization: TextCapitalization.none,
           autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -57,20 +62,20 @@ class _AddressTextFieldState extends State<AddressTextField> {
           controller: widget.controller,
           decoration: InputDecoration(
             hintText: widget.hintText,
-            hintStyle: const TextStyle(fontSize: 18),
+            hintStyle: TextStyle(fontSize: textSize),
             errorMaxLines: 2,
             // isCollapsed: true,
-            contentPadding: const EdgeInsets.fromLTRB(12, 15, 0, 15),
+            contentPadding: const EdgeInsets.fromLTRB(12, 20, 0, 20),
             border: const OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(12.0)),
                 borderSide: BorderSide(
-                  width: 2,
+                  width: 3,
                   color: Colors.grey,
                 )),
             focusedBorder: const OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(12.0)),
                 borderSide: BorderSide(
-                  width: 2,
+                  width: 3,
                   color: Colors.lightBlue,
                 )),
             // label: Text(widget.label),
@@ -84,12 +89,13 @@ class _AddressTextFieldState extends State<AddressTextField> {
                 : showPassword(),
 
             suffixIconConstraints:
-                const BoxConstraints(minHeight: 24, minWidth: 24),
+                BoxConstraints(minHeight: dh * 0.06, minWidth: dh * 0.06),
           )),
     );
   }
 
   Widget showPassword() {
+    double dh = MediaQuery.of(context).size.height;
     if (widget.obscureText == true) {
       return IconButton(
           onPressed: () {
@@ -100,6 +106,7 @@ class _AddressTextFieldState extends State<AddressTextField> {
           },
           icon: Icon(
             passwordVisible == true ? Icons.visibility : Icons.visibility_off,
+            size: dh * .04,
           ));
 
       //   ButtonTheme(

@@ -16,4 +16,8 @@ class LogInControl extends ControllerMVC {
   TextEditingController get email => _logInModel.email;
 
   TextEditingController get password => _logInModel.password;
+
+
+  final formKey = GlobalKey<FormState>();
+
 }

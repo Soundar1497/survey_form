@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:survey_form/controller/login_control.dart';
-import 'package:survey_form/ui/survey_screen/survey_screen.dart';
 
+import '../constant/constant.dart';
+import '../theme/custom_text_style.dart';
 import '../widget/address_TextField.dart';
+import 'feedback_page/feedback_page.dart';
 
 class LogInPage extends StatefulWidget {
   const LogInPage({Key? key}) : super(key: key);
@@ -13,7 +15,6 @@ class LogInPage extends StatefulWidget {
 
 class _LogInPageState extends State<LogInPage> {
   LogInControl _logInControl = LogInControl();
-  var atime;
 
   @override
   void initState() {
@@ -21,24 +22,26 @@ class _LogInPageState extends State<LogInPage> {
     super.initState();
   }
 
-  final formKey = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
     double dw = MediaQuery.of(context).size.width;
     double dh = MediaQuery.of(context).size.height;
-    double w = 500;
+    final safePadding = MediaQuery.of(context).padding.top;
+    print("width : $dw , heigth : $dh ,  safe Area Padding : $safePadding");
 
-    print("width : $dw , heigth : $dh");
+    print("Device orientation : ${MediaQuery.of(context).orientation}");
 
-    return dw > 500
+    return MediaQuery.of(context).orientation == Orientation.portrait
+        // orientation for Portrait
         ? WillPopScope(
             onWillPop: () {
+              var popTimeCount;
+
               DateTime now = DateTime.now();
-              if (atime == null ||
-                  now.difference(atime) > const Duration(seconds: 1)) {
+              if (popTimeCount == null ||
+                  now.difference(popTimeCount) > const Duration(seconds: 1)) {
                 //add duration of press gap
-                atime = now;
+                popTimeCount = now;
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                     duration: Duration(seconds: 1),
                     content: Text(
@@ -48,186 +51,211 @@ class _LogInPageState extends State<LogInPage> {
 
               return Future.value(true);
             },
-            child: Scaffold(
-              resizeToAvoidBottomInset: true,
-              body: SingleChildScrollView(
-                child: Center(
-                  child: Container(
-                    width: 500,
-                    height: dh,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 15, right: 15),
-                      child: Form(
-                        key: formKey,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // name and logo
-                            const SizedBox(
-                              height: 40,
-                            ),
-                            Row(children: [
-                              Padding(
-                                padding: const EdgeInsets.all(4),
-                                child: Image(
-                                  image:
-                                      const AssetImage("assets/playstore.png"),
-                                  width: w * .24,
-                                  height: w * .24,
-                                ),
+            child: SafeArea(
+              child: Scaffold(
+                resizeToAvoidBottomInset: true,
+                body: Stack(children: [
+                  Center(
+                    child: Container(
+                      width: dw,
+                      height: dh,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: dw * .05),
+                        child: Form(
+                          key: _logInControl.formKey,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // name and logo
+                              SizedBox(
+                                height: dh * .05,
                               ),
-                              // const SizedBox(
-                              //   width: 8,
-                              // ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  RichText(
-                                    overflow: TextOverflow.clip,
-                                    textAlign: TextAlign.end,
-                                    softWrap: true,
-                                    text: TextSpan(
-                                      text: 'FOODNOW',
-                                      style: TextStyle(
-                                          fontSize: w * .1,
-                                          fontWeight: FontWeight.w800,
-                                          color: const Color(0xfffc571b)),
-                                      children: <TextSpan>[
-                                        TextSpan(
-                                            text: 'OS',
+                              Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    // Container(
+                                    //   width: 100,
+                                    //   height: 100,
+                                    //   decoration: const BoxDecoration(
+                                    //       image: DecorationImage(
+                                    //           image: AssetImage(
+                                    //               "assets/food_now_os.png"),
+                                    //           fit: BoxFit.fitWidth)),
+                                    // ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        RichText(
+                                          overflow: TextOverflow.clip,
+                                          textAlign: TextAlign.end,
+                                          softWrap: true,
+                                          text: TextSpan(
+                                            text: 'FOODNOW',
                                             style: TextStyle(
-                                                color: Colors.grey[700])),
+                                                fontSize: dw * .07,
+                                                fontWeight: FontWeight.w800,
+                                                color: const Color(0xfffc571b)),
+                                            children: <TextSpan>[
+                                              TextSpan(
+                                                  text: 'OS',
+                                                  style: TextStyle(
+                                                      color: Colors.grey[700])),
+                                            ],
+                                          ),
+                                        ),
+                                        Text(
+                                          'Ordering System Mad Easy',
+                                          style: TextStyle(
+                                              fontSize: dw * .024,
+                                              fontWeight: FontWeight.w800,
+                                              color: Colors.grey[700]),
+                                        )
                                       ],
                                     ),
-                                  ),
-                                  Text(
-                                    'Ordering System Mad Easy',
-                                    style: TextStyle(
-                                        fontSize: w * .04,
-                                        fontWeight: FontWeight.w800,
-                                        color: Colors.grey[700]),
-                                  )
-                                ],
+                                  ]),
+
+                              //log in
+                              SizedBox(
+                                height: dh * .08,
                               ),
-                            ]),
-
-                            //log in
-                            const SizedBox(
-                              height: 30,
-                            ),
-                            const Text(
-                              'LOGIN',
-                              style: TextStyle(
-                                fontSize: 30,
-                                fontWeight: FontWeight.w800,
-                                // color: Colors.grey[700]
+                              Text(
+                                'LOGIN',
+                                style: TextStyle(
+                                  fontSize: dh * 0.03,
+                                  fontWeight: FontWeight.w800,
+                                  // color: Colors.grey[700]
+                                ),
                               ),
-                            ),
 
-                            const SizedBox(
-                              height: 30,
-                            ),
-                            const Text(
-                              'Email',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                // color: Colors.grey[700]
+                              SizedBox(
+                                height: dh * .04,
                               ),
-                            ),
-
-                            AddressTextField(
-                              // icon: const Icon(
-                              //   Icons.search_rounded,
-                              //   size: 24,
-                              // ),
-                              obscureText: false,
-                              controller: _logInControl.email,
-                              hintText: 'Enter Email',
-                              validator: (data) {
-                                if (data!.isEmpty || data == "") {
-                                  return "* please provide necessary details";
-                                }
-                                return null;
-                              },
-                            ),
-
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            const Text(
-                              'Password',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                // color: Colors.grey[700]
+                              Text(
+                                'Email',
+                                style: TextStyle(
+                                  fontSize: dh * 0.02,
+                                  fontWeight: FontWeight.bold,
+                                  // color: Colors.grey[700]
+                                ),
                               ),
-                            ),
 
-                            AddressTextField(
-                              obscureText: true,
-                              controller: _logInControl.password,
-                              hintText: 'Enter Password',
-                              validator: (data) {
-                                if (data!.isEmpty || data == "") {
-                                  return "* please provide necessary details";
-                                }
-                                return null;
-                              },
-                            ),
-                            const SizedBox(
-                              height: 80,
-                            ),
+                              AddressTextField(
+                                // icon: const Icon(
+                                //   Icons.search_rounded,
+                                //   size: 24,
+                                // ),
+                                obscureText: false,
+                                controller: _logInControl.email,
+                                hintText: 'Enter Email',
+                                validator: (data) {
+                                  if (data!.isEmpty || data == "") {
+                                    return "* please provide necessary details";
+                                  }
+                                  return null;
+                                },
+                              ),
 
-                            SizedBox(
-                              width: w,
-                              height: 55,
-                              child: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.pushAndRemoveUntil(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const SurveyScreen()),
-                                        (route) => false);
-                                  },
-                                  style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                              Color(0xfffc571b)),
-                                      shape: MaterialStateProperty.all<
-                                          RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12.0),
+                              SizedBox(
+                                height: dh * .06,
+                              ),
+                              Text(
+                                'Password',
+                                style: TextStyle(
+                                  fontSize: dh * 0.02,
+                                  fontWeight: FontWeight.bold,
+                                  // color: Colors.grey[700]
+                                ),
+                              ),
+
+                              AddressTextField(
+                                obscureText: true,
+                                controller: _logInControl.password,
+                                hintText: 'Enter Password',
+                                validator: (data) {
+                                  if (data!.isEmpty || data == "") {
+                                    return "* please provide necessary details";
+                                  }
+                                  return null;
+                                },
+                              ),
+                              SizedBox(
+                                height: dh * .06,
+                              ),
+
+                              Container(
+                                width: dw,
+                                // height: dh * .055,
+
+                                child: ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const FeedBackPage()),
+                                          (route) => false);
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                              duration:
+                                                  Duration(milliseconds: 1500),
+                                              content:
+                                                  Text("Login Successfully")));
+                                    },
+                                    style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                Color(0xfffc571b)),
+                                        shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                        )),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(12),
+                                      child: Text(
+                                        'Login',
+                                        style: TextStyle(
+                                          fontSize: dh * .035,
                                         ),
-                                      )),
-                                  child: const Text(
-                                    ''
-                                    'Login',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                    ),
-                                  )),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                          ],
+                                      ),
+                                    )),
+                              ),
+                              SizedBox(
+                                height: dh * .005,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
+                  Positioned(
+                    bottom: dh * .02,
+                    child: SizedBox(
+                      width: dw,
+                      child: Text(
+                        Constant.endDetail,
+                        textAlign: TextAlign.center,
+                        style: CustomTextStyle.footerText(context),
+                      ),
+                    ),
+                  ),
+                ]),
               ),
             ))
+        // orientation for Landscape
         : WillPopScope(
             onWillPop: () {
+              var popTimeCount;
+
               DateTime now = DateTime.now();
-              if (atime == null ||
-                  now.difference(atime) > const Duration(seconds: 1)) {
+              if (popTimeCount == null ||
+                  now.difference(popTimeCount) > const Duration(seconds: 1)) {
                 //add duration of press gap
-                atime = now;
+                popTimeCount = now;
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                     duration: Duration(seconds: 1),
                     content: Text(
@@ -237,171 +265,196 @@ class _LogInPageState extends State<LogInPage> {
 
               return Future.value(true);
             },
-            child: Scaffold(
-              resizeToAvoidBottomInset: true,
-              body: SingleChildScrollView(
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 15, right: 15),
-                    child: Form(
-                      key: formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // name and logo
-                          const SizedBox(
-                            height: 40,
-                          ),
-                          Row(children: [
-                            Padding(
-                              padding: const EdgeInsets.all(4),
-                              child: Image(
-                                image: const AssetImage("assets/playstore.png"),
-                                width: dw * .25,
-                                height: dw * .25,
+            child: SafeArea(
+              child: Scaffold(
+                resizeToAvoidBottomInset: true,
+                body: Stack(children: [
+                  Center(
+                    child: Container(
+                      width: dw,
+                      height: dh - safePadding / 2,
+                      child: Padding(
+                        padding: EdgeInsets.only(left: dw * .1, right: dw * .1),
+                        child: Form(
+                          key: _logInControl.formKey,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // name and logo
+                              SizedBox(
+                                height: dh * .02,
                               ),
-                            ),
-                            // const SizedBox(
-                            //   width: 8,
-                            // ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                RichText(
-                                  overflow: TextOverflow.clip,
-                                  textAlign: TextAlign.end,
-                                  softWrap: true,
-                                  text: TextSpan(
-                                    text: 'FOODNOW',
-                                    style: TextStyle(
-                                        fontSize: dw * .09,
-                                        fontWeight: FontWeight.w800,
-                                        color: const Color(0xfffc571b)),
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                          text: 'OS',
+                              Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    // Container(
+                                    //   width: 100,
+                                    //   height: 100,
+                                    //   decoration: const BoxDecoration(
+                                    //       image: DecorationImage(
+                                    //           image: AssetImage(
+                                    //               "assets/food_now_os.png"),
+                                    //           fit: BoxFit.fitWidth)),
+                                    // ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        RichText(
+                                          overflow: TextOverflow.clip,
+                                          textAlign: TextAlign.end,
+                                          softWrap: true,
+                                          text: TextSpan(
+                                            text: 'FOODNOW',
+                                            style: TextStyle(
+                                                fontSize: dw * .03,
+                                                fontWeight: FontWeight.w800,
+                                                color: const Color(0xfffc571b)),
+                                            children: <TextSpan>[
+                                              TextSpan(
+                                                  text: 'OS',
+                                                  style: TextStyle(
+                                                      color: Colors.grey[700])),
+                                            ],
+                                          ),
+                                        ),
+                                        Text(
+                                          'Ordering System Mad Easy',
                                           style: TextStyle(
-                                              color: Colors.grey[700])),
-                                    ],
-                                  ),
+                                              fontSize: dw * .01,
+                                              fontWeight: FontWeight.w800,
+                                              color: Colors.grey[700]),
+                                        )
+                                      ],
+                                    ),
+                                  ]),
+
+                              //log in
+                              SizedBox(
+                                height: dh * .02,
+                              ),
+                              Text(
+                                'LOGIN',
+                                style: TextStyle(
+                                  fontSize: dh * 0.07,
+                                  fontWeight: FontWeight.w800,
+                                  // color: Colors.grey[700]
                                 ),
-                                Text(
-                                  'Ordering System Mad Easy',
-                                  style: TextStyle(
-                                      fontSize: dw * .04,
-                                      fontWeight: FontWeight.w800,
-                                      color: Colors.grey[700]),
-                                )
-                              ],
-                            ),
-                          ]),
+                              ),
 
-                          //log in
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          const Text(
-                            'LOGIN',
-                            style: TextStyle(
-                              fontSize: 30,
-                              fontWeight: FontWeight.w800,
-                              // color: Colors.grey[700]
-                            ),
-                          ),
+                              SizedBox(
+                                height: dh * .04,
+                              ),
+                              const Text(
+                                'Email',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  // color: Colors.grey[700]
+                                ),
+                              ),
 
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          const Text(
-                            'Email',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              // color: Colors.grey[700]
-                            ),
-                          ),
-
-                          AddressTextField(
-                            // icon: const Icon(
-                            //   Icons.search_rounded,
-                            //   size: 24,
-                            // ),
-                            obscureText: false,
-                            controller: _logInControl.email,
-                            hintText: 'Enter Email',
-                            validator: (data) {
-                              if (data!.isEmpty || data == "") {
-                                return "* please provide necessary details";
-                              }
-                              return null;
-                            },
-                          ),
-
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          const Text(
-                            'Password',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              // color: Colors.grey[700]
-                            ),
-                          ),
-
-                          AddressTextField(
-                            obscureText: true,
-                            controller: _logInControl.password,
-                            hintText: 'Enter Password',
-                            validator: (data) {
-                              if (data!.isEmpty || data == "") {
-                                return "* please provide necessary details";
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(
-                            height: 80,
-                          ),
-
-                          SizedBox(
-                            width: dw,
-                            height: 55,
-                            child: ElevatedButton(
-                                onPressed: () {
-                                  Navigator.pushAndRemoveUntil(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const SurveyScreen()),
-                                      (route) => false);
+                              AddressTextField(
+                                // icon: const Icon(
+                                //   Icons.search_rounded,
+                                //   size: 24,
+                                // ),
+                                obscureText: false,
+                                controller: _logInControl.email,
+                                hintText: 'Enter Email',
+                                validator: (data) {
+                                  if (data!.isEmpty || data == "") {
+                                    return "* please provide necessary details";
+                                  }
+                                  return null;
                                 },
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        Color(0xfffc571b)),
-                                    shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
+                              ),
+
+                              SizedBox(
+                                height: dh * .04,
+                              ),
+                              const Text(
+                                'Password',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  // color: Colors.grey[700]
+                                ),
+                              ),
+
+                              AddressTextField(
+                                obscureText: true,
+                                controller: _logInControl.password,
+                                hintText: 'Enter Password',
+                                validator: (data) {
+                                  if (data!.isEmpty || data == "") {
+                                    return "* please provide necessary details";
+                                  }
+                                  return null;
+                                },
+                              ),
+                              SizedBox(
+                                height: dh * .04,
+                              ),
+
+                              SizedBox(
+                                width: dw,
+                                height: 50,
+                                child: ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const FeedBackPage()),
+                                          (route) => false);
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                              duration:
+                                                  Duration(milliseconds: 1500),
+                                              content:
+                                                  Text("Login Successfully")));
+                                    },
+                                    style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                Color(0xfffc571b)),
+                                        shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                        )),
+                                    child: const Text(
+                                      ''
+                                      'Login',
+                                      style: TextStyle(
+                                        fontSize: 20,
                                       ),
                                     )),
-                                child: const Text(
-                                  ''
-                                  'Login',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                  ),
-                                )),
+                              ),
+                              SizedBox(
+                                height: dh * .05,
+                              ),
+                            ],
                           ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
-                ),
+                  Positioned(
+                    bottom: dh * .01,
+                    child: SizedBox(
+                      width: dw,
+                      child: Text(
+                        Constant.endDetail,
+                        textAlign: TextAlign.center,
+                        style: CustomTextStyle.footerText(context),
+                      ),
+                    ),
+                  ),
+                ]),
               ),
             ));
   }
