@@ -26,7 +26,7 @@ class FeedBackValue extends ChangeNotifier {
           context: context,
           barrierDismissible: false,
           builder: (context) {
-            Future.delayed(const Duration(milliseconds: 1500)).then((value) {
+            Future.delayed(const Duration(milliseconds: 4000)).then((value) {
               foodButton = "";
               serviceButton = "";
               Navigator.pushAndRemoveUntil(
